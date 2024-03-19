@@ -28,8 +28,8 @@ usable as an embeded driver in the ``sntk::tracking_module`` :
 
 - .. code:: c++
 
-     void _at_initialize(const   datatools::properties   &   config_,
-                         datatools::service_manager  & services_) override;
+     void _at_initialize(const datatools::properties & config_,
+                         datatools::service_manage & services_) override;
   ..
 
   This method configures and initializes the internal working space of
@@ -45,7 +45,7 @@ usable as an embeded driver in the ``sntk::tracking_module`` :
 
 - .. code:: c++
             
-     int process_tracking(const std::vector<snemo::processing::tracking_precluster> & preclusters_,
+     int process_tracking(const snemo::processing::tracking_precluster_collection_type & preclusters_,
                           const base_tracking_driver::calo_hit_collection_type & calo_hits_,
                           snemo::datamodel::tracker_clustering_data & clustering_,
                           snemo::datamodel::tracker_trajectory_data & track_fitting_) override;
