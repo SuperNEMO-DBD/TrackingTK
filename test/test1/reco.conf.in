@@ -1,0 +1,98 @@
+#@description SuperNEMO demonstrator tracking test pipeline
+#@key_label  "name"
+#@meta_label "type"
+
+[name="flreconstruct.plugins" type="flreconstruct::section"]
+  #@config Module load section
+  plugins : string[1] = "TrackingTK"
+  TrackingTK.directory : string = "@PROJECT_BINARY_DIR@/"
+
+[name="pipeline" type="dpp::chain_module"]
+  #@config Must define "pipeline" as this is the module flreconstruct will use
+  # Define the main chain of modules in the pipeline:
+  # 1. Mock digitize and mock calibrate
+  # 2. CAT clusterization of tracker hits
+  # 3. TrackFit-ting tracker cluster hits
+  # 4. Reconstruct charged particle tracks
+  # 5. Reconstruct gamma clusters
+  modules : string[2] =  \
+    "MockCalibration" \
+    "Tracking" 
+ 
+
+[name="MockCalibration" type="dpp::chain_module"]
+  #@config A chain of processing modules that performs the mock calibration
+  modules : string[2] = "CalibrateTracker" "CalibrateCalorimeters"
+
+
+[name="CalibrateTracker" type="snemo::processing::mock_tracker_s2c_module"]
+  #@config A mock tracker calibration module
+  random.seed      : integer = 12345
+  store_mc_hit_id  : boolean = true
+  delayed_drift_time_threshold : real as time = 13.0 microsecond
+
+
+[name="CalibrateCalorimeters" type="snemo::processing::mock_calorimeter_s2c_module"]
+  #@config A mock calorimeter calibration module
+  Geo_label       : string = "geometry"
+  random.seed     : integer = 12345
+  store_mc_hit_id : boolean = true
+  hit_categories  : string[3] = "calo" "xcalo" "gveto"
+
+  calorimeter_regime_database_path : string as path = "@falaise:snemo/demonstrator/reconstruction/db/calorimeter_regime_database_v0.db"
+
+  pol3d_parameters_mwall_8inch_path : string as path = "@falaise:snemo/demonstrator/reconstruction/db/fit_parameters_10D_MW_8inch.db"
+  pol3d_parameters_mwall_5inch_path : string as path = "@falaise:snemo/demonstrator/reconstruction/db/fit_parameters_10D_MW_5inch.db"
+  pol3d_parameters_xwall_path : string as path = "@falaise:snemo/demonstrator/reconstruction/db/fit_parameters_10D_XW.db"
+  pol3d_parameters_gveto_path : string as path = "@falaise:snemo/demonstrator/reconstruction/db/fit_parameters_10D_GV.db"
+
+
+[name="Tracking" type="sntk::tracking_module"]
+  #@config Parameters for the tracking algorithm
+
+  # Names of the input and output banks used by the tracking module:
+  EH_tag  : string = "EH"
+  ECD_tag : string = "CD"
+  TCD_tag : string = "TCD"
+  TTD_tag : string = "TTD"
+
+  #@parameter Identifier of the tracking driver
+  driver : string = "notracking"
+  
+  # General parameters of the tracking driver
+  # =========================================
+    
+  #@parameter Verbosity of the embeded tracking driver 
+  notracking.verbosity : string = "debug"
+  # 
+  # Service requirements of the embeded tracking driver 
+  notracking.services.geometry      : boolean = true
+  notracking.services.calo_locator  : boolean = true
+  notracking.services.xcalo_locator : boolean = true
+  notracking.services.gg_locator    : boolean = true
+  notracking.services.cell_status   : boolean = false
+
+  # Tracker pre-clusterizer preprocessing of the tracking driver:
+
+  #@parameter Clustering time of the tracking pre-clusterizer  
+  notracking.TPC.delayed_hit_cluster_time : real as time = 10.0 us
+
+  #@parameter Tracking pre-clusterizer flag for processing prompt hits
+  notracking.TPC.processing_prompt_hits   : boolean = true
+
+  #@parameter Tracking pre-clusterizer flag for processing delayed hits
+  notracking.TPC.processing_delayed_hits  : boolean = true
+
+  #@parameter Tracking pre-clusterizer flag for splitting tracking chamber
+  notracking.TPC.split_chamber            : boolean = true
+
+  #@parameter Angular tolerance for the "notracking" algorithm
+  notracking.angular_tolerance : real as angle = 1.0 degree
+ 
+  #@parameter Visualization flag for the "notracking" algorithm
+  notracking.visu : boolean = true
+ 
+  #@parameter Parameter for the visualization (embeded viewer)
+  notracking.viewer.display_mode : string = "text"
+
+# end
