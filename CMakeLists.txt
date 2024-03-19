@@ -23,6 +23,8 @@ find_package(Falaise REQUIRED 5.1.1)
 # find_package(ROOT REQUIRED)
 
 include(GNUInstallDirs)
+message(STATUS "CMAKE_INSTALL_BINDIR='${CMAKE_INSTALL_BINDIR}'")
+message(STATUS "CMAKE_INSTALL_LIBDIR='${CMAKE_INSTALL_LIBDIR}'")
 
 include_directories(
   ${CMAKE_CURRENT_SOURCE_DIR}
@@ -58,8 +60,7 @@ target_link_libraries(TrackingTK
   Falaise::FalaiseModule
   # ${ROOT_LIBRARIES} ROOT::Geom
   )  
-
-install(TARGETS TrackingTK DESTINATION ${CMAKE_INSTALL_PLUGINDIR})
+install(TARGETS TrackingTK DESTINATION ${CMAKE_INSTALL_LIBDIR})
 
 configure_file(
   trackingtk-config.in
@@ -71,12 +72,10 @@ install(PROGRAMS ${PROJECT_BINARY_DIR}/trackingtk-config
 
 option(TrackingTK_ENABLE_TESTING "Build unit testing system for TrackingTK" ON)
 
-
 if(TrackingTK_ENABLE_TESTING)
   enable_testing()
   # Build the test subdirectory
   add_subdirectory(test)
 endif()
-
 
 # - end

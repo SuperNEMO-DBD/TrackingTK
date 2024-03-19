@@ -2,8 +2,8 @@
 
 trackingtk_version="@PROJECT_VERSION@"
 trackingtk_install_prefix="@CMAKE_INSTALL_PREFIX@"
-trackingtk_bin_dir="${trackingtk_install_prefix}/bin"
-trackingtk_lib_dir="${trackingtk_install_prefix}/lib"
+trackingtk_bin_dir="${trackingtk_install_prefix}/@CMAKE_INSTALL_BINDIR@"
+trackingtk_lib_dir="${trackingtk_install_prefix}/@CMAKE_INSTALL_LIBDIR@"
 
 option="$1"
 shift 1
