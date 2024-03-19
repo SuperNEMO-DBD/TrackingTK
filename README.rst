@@ -1,6 +1,5 @@
 =========================================
 SuperNEMO TrackingTK
-
 =========================================
 
 :description: Falaise tracking plugin for SuperNEMO data reconstruction
