@@ -1,0 +1,50 @@
+#!/usr/bin/env bash
+
+trackingtk_version="@PROJECT_VERSION@"
+trackingtk_install_prefix="@CMAKE_INSTALL_PREFIX@"
+trackingtk_bin_dir="${trackingtk_install_prefix}/bin"
+trackingtk_lib_dir="${trackingtk_install_prefix}/lib"
+
+option="$1"
+shift 1
+
+function app_usage()
+{
+
+    cat <<EOF
+trackingtk-config - Print informations about the TrackingTK package
+
+Usage:  trackingtk-config [OPTION]
+
+Options:
+
+  --help         Print this help
+  --prefix       Print the installation prefix
+  --version      Print the TrackingTK version
+  --bindir       Print the installation path for binaries
+  --libdir       Print the installation path for libraries
+
+Notice:  When loaded, the TrackingTK library registers itself in the Bayeux's kernel
+under the name 'trackingtk'.
+
+EOF
+    return 0
+}
+
+if [ "x${option}" = "x--help" -o "x${option}" = "x-h" ]; then
+    app_usage
+elif [ "x${option}" = "x--prefix" ]; then
+   echo ${trackingtk_install_prefix}
+elif [ "x${option}" = "x--version" ]; then
+   echo ${trackingtk_version}
+elif [ "x${option}" = "x--bindir" ]; then
+   echo ${trackingtk_bin_dir}
+elif [ "x${option}" = "x--libdir" ]; then
+   echo ${trackingtk_lib_dir}
+else
+  echo >&2 "[error] Invalid switch '${option}'!"
+  app_usage
+  exit 1
+fi
+
+exit 0
